@@ -31,7 +31,7 @@
       <q-page-container>
         <q-page>
           <div class="graphContainer">
-            <VueFlow>
+            <VueFlow :nodes="nodeList">
               <Background class="background" />
               <template #node-custom="props">
                 <CustomNode v-bind="props" />
@@ -73,11 +73,10 @@ const initMatrix = ref<IMatrix>({
   rows: [],
 });
 
-const { onConnect, addEdges, addNodes, getNodes, getEdges, onNodesChange } =
-  useVueFlow();
+const { onConnect, addEdges, getNodes, getEdges, onNodesChange } = useVueFlow();
 const nodeCompter = ref(0);
 
-// const nodeList = ref<Node[]>([]);
+const nodeList = ref<Node[]>([]);
 
 function generateNode() {
   const newNode = {
@@ -90,7 +89,7 @@ function generateNode() {
     data: { label: `X${nodeCompter.value}` },
   };
 
-  addNodes(newNode);
+  nodeList.value.push(newNode);
 }
 
 onConnect((params) => {
@@ -109,7 +108,17 @@ onConnect((params) => {
   }
 });
 
-
+onNodesChange((param) => {
+  param.forEach((node) => {
+    if (node.type === "remove") {
+      nodeList.value.splice(
+        nodeList.value.findIndex((n) => n.id == node.id),
+        1
+      );
+      console.log(nodeList.value);
+    }
+  });
+});
 
 function createInitialMatrix() {
   const edges = getEdges.value;
