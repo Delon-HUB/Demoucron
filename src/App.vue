@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-btn @click="createInitialMatrix">Boutton</q-btn>
+    <q-btn @click="min">Min</q-btn>
   </div>
   <div>
     <q-layout view="hHh Lpr lff" container class="shadow-2 layout">
@@ -23,8 +23,18 @@
 
       <q-drawer v-model="drawer" show-if-above :width="900">
         <q-scroll-area class="fit">
-          <!-- <Approach :init-table="initTable" /> -->
-          <CustomTable :matrix="initMatrix" />
+          <q-list padding class="menu-list">
+            <q-item clickable v-ripple v-for="i in matrixList.length">
+              <div class="row">
+                <div class="col">
+                  <CustomTable :matrix="matrixList[i - 1]" />
+                </div>
+                <div class="col" v-if="matrixList.length >= 2">
+                  <CustomTable :matrix="matrixList[i]" />
+                </div>
+              </div>
+            </q-item>
+          </q-list>
         </q-scroll-area>
       </q-drawer>
 
@@ -35,9 +45,6 @@
               <Background class="background" />
               <template #node-custom="props">
                 <CustomNode v-bind="props" />
-              </template>
-              <template #edge-custom="props">
-                <CustomEdge v-bind="props" />
               </template>
             </VueFlow>
           </div>
@@ -62,16 +69,20 @@
 import { Node, useVueFlow, VueFlow } from "@vue-flow/core";
 import CustomNode from "./components/CustomNode.vue";
 import { ref } from "vue";
-import CustomEdge from "./components/CustomEdge.vue";
 import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
 import CustomTable from "./components/CustomTable.vue";
+import { demoucronMin } from "./utils/fonctions";
 
 const drawer = ref(false);
-const initMatrix = ref<IMatrix>({
-  title: "Matrice D1",
-  rows: [],
-});
+const matrixList = ref<IMatrix[]>([]);
+
+function min() {
+  matrixList.value = demoucronMin(createInitialMatrix());
+  matrixList.value.forEach(
+    (matrix, index) => (matrix.title = `Matrice D${index + 1}`)
+  );
+}
 
 const { onConnect, addEdges, getNodes, getEdges, onNodesChange } = useVueFlow();
 const nodeCompter = ref(0);
@@ -115,7 +126,6 @@ onNodesChange((param) => {
         nodeList.value.findIndex((n) => n.id == node.id),
         1
       );
-      console.log(nodeList.value);
     }
   });
 });
@@ -131,22 +141,23 @@ function createInitialMatrix() {
     };
 
     edgesFound.forEach((ed) => {
-      row.data[parseInt(ed.targetNode.id) - 1] = parseInt(
-        ed.label?.toString() || "invalid"
+      const index = nodeList.value.findIndex(
+        (nod) => ed.targetNode.id == nod.id
       );
+      row.data[index] = parseInt(ed.label?.toString() || "invalid");
     });
-    for (let i = 0; i < nodes.length; i++)
+
+    for (let i = 0; i < nodes.length; i++) {
       if (!row.data[i]) row.data[i] = Infinity;
+    }
 
     return row;
   });
 
-  initMatrix.value = {
-    title: "Matrice D1",
+  return {
+    title: "",
     rows: rows,
   };
-  console.log(initMatrix.value);
-  initMatrix;
 }
 </script>
 
