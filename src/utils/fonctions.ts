@@ -56,12 +56,6 @@ export function demoucronMin(initMatrix: IMatrix): IMatrix[] {
 
           const min = Math.min(w, lastMatrix.rows[incoming].data[outgoing]);
           nextMatrix.rows[incoming].data[outgoing] = min;
-
-          console.log(
-            `Sommet ${edgeOfThisNode.nodeId + 1} : [${incoming + 1},${
-              outgoing + 1
-            }]`
-          );
         });
       });
 

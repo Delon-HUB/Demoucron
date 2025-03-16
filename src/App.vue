@@ -25,11 +25,14 @@
         <q-scroll-area class="fit">
           <q-list padding class="menu-list">
             <q-item clickable v-ripple v-for="i in matrixList.length">
-              <div class="row">
+              <div v-if="matrixList.length == 1">
+                <CustomTable :matrix="matrixList[i - 1]" />
+              </div>
+              <div class="row" v-if="matrixList[i]">
                 <div class="col">
                   <CustomTable :matrix="matrixList[i - 1]" />
                 </div>
-                <div class="col" v-if="matrixList.length >= 2">
+                <div class="col">
                   <CustomTable :matrix="matrixList[i]" />
                 </div>
               </div>
