@@ -1,28 +1,82 @@
 <template>
   <div>
-    <q-btn @click="min">Min</q-btn>
-  </div>
-  <div>
     <q-layout view="hHh Lpr lff" container class="shadow-2 layout">
-      <q-header elevated>
+      <q-header class="header">
         <q-toolbar>
-          <q-btn
-            flat
-            @click="drawer = !drawer"
-            round
-            dense
-            icon="visibility"
-            class="text-bold"
-            :label="drawer ? 'Cacher la démarche' : 'Voir la démarche'"
-          />
-          <q-toolbar-title class="text-bold text-center"
-            >Algorithme Demourcon</q-toolbar-title
-          >
+          <q-toolbar-title class="text-bold text-right text-uppercase">
+            <div class="text-left">
+              <q-avatar>
+                <img src="/src/assets/brain_icon.png" />
+              </q-avatar>
+              <span class="title-princ text-h5">Algorithme de Demoucron</span>
+              <div class="q-pr-md text-white">
+                <q-btn-group flat>
+                  <q-btn
+                    @click="drawer = !drawer"
+                    round
+                    dense
+                    icon="visibility"
+                    class="text-bold"
+                    :label="drawer ? 'Cacher la démarche' : 'Voir la démarche'"
+                    no-caps
+                  />
+                  <q-btn
+                    class="text-bold"
+                    no-caps
+                    label="Minimum"
+                    icon="arrow_downward"
+                    @click="min"
+                  />
+                  <q-btn
+                    class="text-bold"
+                    no-caps
+                    label="Maximum"
+                    icon="arrow_upward"
+                  />
+                </q-btn-group>
+              </div>
+            </div>
+          </q-toolbar-title>
         </q-toolbar>
+
+        <!-- <q-toolbar>
+          <q-toolbar-title>
+            <div class="row">
+              <div class="col-1 q-mx-xs">
+                <q-select
+                  rounded
+                  v-model="model"
+                  :options="options"
+                  label="Départ"
+                  icon="send"
+                  color="white"
+                >
+                  <template v-slot:prepend>
+                    <q-icon color="white" name="place" />
+                  </template>
+                </q-select>
+              </div>
+              <div class="col-2 text-center q-mx-xs">
+                <q-icon color="black" size="64px" name="arrow_right_alt" />
+              </div>
+              <div class="col-1 q-mx-xs">
+                <q-select
+                  rounded
+                  v-model="model"
+                  :options="options"
+                  label="Déstination"
+                >
+                  <template v-slot:prepend>
+                    <q-icon color="white" name="place" /> </template
+                ></q-select>
+              </div>
+            </div>
+          </q-toolbar-title>
+        </q-toolbar> -->
       </q-header>
 
       <q-drawer v-model="drawer" show-if-above :width="900">
-        <q-scroll-area class="fit">
+        <q-scroll-area class="fit approach">
           <q-list padding class="menu-list">
             <q-item clickable v-ripple v-for="i in matrixList.length">
               <div v-if="matrixList.length == 1">
@@ -76,6 +130,9 @@ import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
 import CustomTable from "./components/CustomTable.vue";
 import { demoucronMin } from "./utils/fonctions";
+
+const model = ref(null);
+const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"]);
 
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
@@ -182,11 +239,22 @@ function createInitialMatrix() {
 }
 
 .background {
-  background: linear-gradient(to right, #eed991, #ccf7f4);
+  /* background: linear-gradient(to right, #eed991, #ccf7f4); */
+  background: whitesmoke;
 }
 
 .layout {
   width: 100vw;
   height: 100vh;
+}
+
+.header {
+  background: linear-gradient(to right, #295270, #524175);
+}
+
+.title-princ {
+  background-image: linear-gradient(to right, #fcef64, #fcc44b, #f20089);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 </style>
