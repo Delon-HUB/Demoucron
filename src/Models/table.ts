@@ -1,4 +1,5 @@
 export interface IRow {
+  rowName?: string[];
   data: number[];
 }
 
@@ -11,9 +12,4 @@ export interface INodeIncomingAndOutgoingEdge {
   nodeId: number;
   Incoming: number[];
   outgoing: number[];
-}
-
-export interface ICoordonate {
-  x: number;
-  y: number;
 }

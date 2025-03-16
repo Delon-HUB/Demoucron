@@ -9,12 +9,12 @@
       <thead>
         <tr>
           <th></th>
-          <th v-for="i in matrix.rows.length">{{ i }}</th>
+          <th v-for="rowName in matrix.rows[0].rowName">{{ rowName }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(row, index) in matrix.rows">
-          <th>{{ index + 1 }}</th>
+          <th v-if="row.rowName">{{ row.rowName[index] }}</th>
           <td v-for="val in row.data">{{ val != Infinity ? val : "+∞" }}</td>
         </tr>
       </tbody>
@@ -39,8 +39,5 @@ td,
 th {
   width: 64px;
   text-align: center;
-}
-th {
-  font-size: large;
 }
 </style>

@@ -38,41 +38,6 @@
             </div>
           </q-toolbar-title>
         </q-toolbar>
-
-        <!-- <q-toolbar>
-          <q-toolbar-title>
-            <div class="row">
-              <div class="col-1 q-mx-xs">
-                <q-select
-                  rounded
-                  v-model="model"
-                  :options="options"
-                  label="Départ"
-                  icon="send"
-                  color="white"
-                >
-                  <template v-slot:prepend>
-                    <q-icon color="white" name="place" />
-                  </template>
-                </q-select>
-              </div>
-              <div class="col-2 text-center q-mx-xs">
-                <q-icon color="black" size="64px" name="arrow_right_alt" />
-              </div>
-              <div class="col-1 q-mx-xs">
-                <q-select
-                  rounded
-                  v-model="model"
-                  :options="options"
-                  label="Déstination"
-                >
-                  <template v-slot:prepend>
-                    <q-icon color="white" name="place" /> </template
-                ></q-select>
-              </div>
-            </div>
-          </q-toolbar-title>
-        </q-toolbar> -->
       </q-header>
 
       <q-drawer v-model="drawer" show-if-above :width="900">
@@ -123,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { Node, useVueFlow, VueFlow } from "@vue-flow/core";
+import { Edge, Node, useVueFlow, VueFlow } from "@vue-flow/core";
 import CustomNode from "./components/CustomNode.vue";
 import { ref } from "vue";
 import { Background } from "@vue-flow/background";
@@ -137,17 +102,74 @@ const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"]);
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
 
-function min() {
-  matrixList.value = demoucronMin(createInitialMatrix());
-  matrixList.value.forEach(
-    (matrix, index) => (matrix.title = `Matrice D${index + 1}`)
-  );
-}
-
 const { onConnect, addEdges, getNodes, getEdges, onNodesChange } = useVueFlow();
 const nodeCompter = ref(0);
-
 const nodeList = ref<Node[]>([]);
+
+function min() {
+  getEdges.value.forEach((edge) => {
+    edge.style = { strokeWidth: 6 };
+  });
+
+  matrixList.value = demoucronMin(createInitialMatrix());
+  let rowsName: string[] = nodeList.value.map((node) => node.data.label);
+
+  matrixList.value.forEach((matrix, index) => {
+    matrix.title = `Matrice D${index + 1}`;
+    matrix.rows.forEach((row) => (row.rowName = rowsName));
+  });
+
+  const paths = searchPath(
+    nodeList.value[0],
+    nodeList.value[nodeList.value.length - 1]
+  );
+
+  paths.forEach((edge) => {
+    const found = getEdges.value.find((ed) => ed.id == edge.id);
+    if (found) found.style = { strokeWidth: 6, stroke: "greenyellow" };
+  });
+}
+
+function searchPath(from: Node, to: Node): Edge[] {
+  const lastMatrix = matrixList.value[matrixList.value.length - 1];
+  const pathNode: Node[] = [to];
+  const edgePath: Edge[] = [];
+
+  const found = getEdges.value.find(
+    (ed) => ed.sourceNode.id == to.id || ed.targetNode.id == to.id
+  );
+
+  if (found) {
+    while (pathNode[0] != from) {
+      let minVal: { rowId: number; val: number } = {
+        rowId: -1,
+        val: Infinity,
+      };
+
+      for (let i = 0; i < lastMatrix.rows.length; i++) {
+        const currentVal: number =
+          lastMatrix.rows[i].data[nodeList.value.indexOf(pathNode[0])];
+        if (Math.min(minVal.val, currentVal) == currentVal) {
+          minVal.rowId = i;
+          minVal.val = currentVal;
+        }
+      }
+
+      pathNode.unshift(nodeList.value[minVal.rowId]);
+    }
+
+    getEdges.value.map((ed) => {
+      for (let i = 0; i < pathNode.length; i++) {
+        if (
+          ed.sourceNode.id == pathNode[i].id &&
+          ed.targetNode.id == pathNode[i + 1]?.id
+        )
+          edgePath.push(ed);
+      }
+    });
+  }
+  return edgePath;
+}
 
 function generateNode() {
   const newNode = {
