@@ -162,10 +162,28 @@ function searchPath(from: Node, to: Node): Edge[] {
         };
 
         for (let i = 0; i < lastMatrix.rows.length; i++) {
-          const currentVal: number = lastMatrix.rows[i].data[destIndex];
-          if (Math.min(minVal.val, currentVal) == currentVal) {
+          let currentVal: number = lastMatrix.rows[i].data[destIndex];
+          let tmpMinVal = Math.min(minVal.val, currentVal);
+          if (tmpMinVal == currentVal) {
             minVal.val = currentVal;
             minVal.rowId = i;
+          }
+          const isValidPredecessor = !lastMatrix.rows
+            .map((row) => row.data[minVal.rowId])
+            .every((val) => val == Infinity);
+          console.log("valid prédecesseur : " + isValidPredecessor);
+          if (!isValidPredecessor) {
+            minVal.rowId = -1;
+            minVal.val = Infinity;
+            for (let j = 0; j < lastMatrix.rows.length; j++) {
+              if (j == i) continue;
+              currentVal = lastMatrix.rows[j].data[destIndex];
+              tmpMinVal = Math.min(minVal.val, currentVal);
+              if (tmpMinVal == currentVal) {
+                minVal.val = currentVal;
+                minVal.rowId = j;
+              }
+            }
           }
         }
         pathNode.unshift(nodeList.value[minVal.rowId]);
