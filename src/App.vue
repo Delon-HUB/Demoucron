@@ -132,39 +132,55 @@ function min() {
 
 function searchPath(from: Node, to: Node): Edge[] {
   const lastMatrix = matrixList.value[matrixList.value.length - 1];
+  const firstMatrix = matrixList.value[0];
   const pathNode: Node[] = [to];
   const edgePath: Edge[] = [];
 
-  const found = getEdges.value.find(
-    (ed) => ed.sourceNode.id == to.id || ed.targetNode.id == to.id
-  );
+  const sourceIndex = nodeList.value.findIndex((node) => node.id == from.id);
+  let destIndex = nodeList.value.findIndex((node) => node.id == to.id);
 
-  if (found) {
+  let lengthOfDestination = lastMatrix.rows[sourceIndex].data[destIndex];
+  if (lengthOfDestination && lengthOfDestination != Infinity) {
     while (pathNode[0] != from) {
-      let minVal: { rowId: number; val: number } = {
-        rowId: -1,
-        val: Infinity,
-      };
+      destIndex = nodeList.value.findIndex(
+        (node) => node.id == pathNode[0]?.id
+      );
 
-      for (let i = 0; i < lastMatrix.rows.length; i++) {
-        const currentVal: number =
-          lastMatrix.rows[i].data[nodeList.value.indexOf(pathNode[0])];
-        if (Math.min(minVal.val, currentVal) == currentVal) {
-          minVal.rowId = i;
-          minVal.val = currentVal;
+      const isDirectPath =
+        firstMatrix.rows[sourceIndex].data[destIndex] ==
+        lastMatrix.rows[sourceIndex].data[destIndex];
+
+      console.log("dest index = " + destIndex);
+      console.log("Direct path: " + isDirectPath);
+
+      if (isDirectPath) {
+        pathNode.unshift(from);
+      } else {
+        let minVal: { rowId: number; val: number } = {
+          rowId: -1,
+          val: Infinity,
+        };
+
+        for (let i = 0; i < lastMatrix.rows.length; i++) {
+          const currentVal: number = lastMatrix.rows[i].data[destIndex];
+          if (Math.min(minVal.val, currentVal) == currentVal) {
+            minVal.val = currentVal;
+            minVal.rowId = i;
+          }
         }
+        pathNode.unshift(nodeList.value[minVal.rowId]);
+        console.log(pathNode.map((node) => node.data.label).join(" => "));
       }
-
-      pathNode.unshift(nodeList.value[minVal.rowId]);
     }
 
-    getEdges.value.map((ed) => {
+    getEdges.value.forEach((ed) => {
       for (let i = 0; i < pathNode.length; i++) {
         if (
-          ed.sourceNode.id == pathNode[i].id &&
-          ed.targetNode.id == pathNode[i + 1]?.id
+          ed.sourceNode?.id == pathNode[i]?.id &&
+          ed.targetNode?.id == pathNode[i + 1]?.id
         )
           edgePath.push(ed);
+        console.log(ed.sourceNode.data?.label + " => ");
       }
     });
   }
