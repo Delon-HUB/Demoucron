@@ -150,9 +150,6 @@ function searchPath(from: Node, to: Node): Edge[] {
         firstMatrix.rows[sourceIndex].data[destIndex] ==
         lastMatrix.rows[sourceIndex].data[destIndex];
 
-      console.log("dest index = " + destIndex);
-      console.log("Direct path: " + isDirectPath);
-
       if (isDirectPath) {
         pathNode.unshift(from);
       } else {
@@ -171,7 +168,7 @@ function searchPath(from: Node, to: Node): Edge[] {
           const isValidPredecessor = !lastMatrix.rows
             .map((row) => row.data[minVal.rowId])
             .every((val) => val == Infinity);
-          console.log("valid prédecesseur : " + isValidPredecessor);
+
           if (!isValidPredecessor) {
             minVal.rowId = -1;
             minVal.val = Infinity;
@@ -187,7 +184,6 @@ function searchPath(from: Node, to: Node): Edge[] {
           }
         }
         pathNode.unshift(nodeList.value[minVal.rowId]);
-        console.log(pathNode.map((node) => node.data.label).join(" => "));
       }
     }
 
@@ -198,7 +194,6 @@ function searchPath(from: Node, to: Node): Edge[] {
           ed.targetNode?.id == pathNode[i + 1]?.id
         )
           edgePath.push(ed);
-        console.log(ed.sourceNode.data?.label + " => ");
       }
     });
   }
