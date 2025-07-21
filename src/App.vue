@@ -97,9 +97,8 @@ import CustomTable from "./components/CustomTable.vue";
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
 
-const { onConnect, addEdges, getNodes, getEdges, onNodesChange } = useVueFlow();
+const { onConnect, addEdges, addNodes,getNodes, getEdges, onNodesChange } = useVueFlow();
 const nodeCompter = ref(0);
-const nodeList = ref<Node[]>([]);
 
 function generateNode() {
   const newNode = {
@@ -112,7 +111,7 @@ function generateNode() {
     data: { label: `X${nodeCompter.value}` },
   };
 
-  nodeList.value.push(newNode);
+  addNodes(newNode);
 }
 
 onConnect((params) => {
@@ -131,16 +130,6 @@ onConnect((params) => {
   }
 });
 
-onNodesChange((param) => {
-  param.forEach((node) => {
-    if (node.type === "remove") {
-      nodeList.value.splice(
-        nodeList.value.findIndex((n) => n.id == node.id),
-        1
-      );
-    }
-  });
-});
 </script>
 
 <style scoped>
