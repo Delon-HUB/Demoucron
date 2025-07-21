@@ -91,7 +91,7 @@ import { Edge, Node, useVueFlow, VueFlow } from "@vue-flow/core";
 import CustomNode from "./components/CustomNode.vue";
 import { ref } from "vue";
 import { Background } from "@vue-flow/background";
-import { IMatrix } from "./Models/table";
+import { IMatrix, IRow } from "./Models/table";
 import CustomTable from "./components/CustomTable.vue";
 
 const drawer = ref(false);
@@ -129,6 +129,43 @@ function example() {
   connect(getNodes.value[4].id, getNodes.value[5].id, 2);
 }
 example();
+
+function createInitialMatrix(isMin: boolean) {
+  const nodes = getNodes.value;
+  const edges = getEdges.value;
+
+  const rows: IRow[] = nodes.map((node) => {
+    const outgoingEdge = edges.filter((edge) => edge.sourceNode == node);
+    const row: IRow = {
+      name: `X${node.id}`,
+      data: [],
+    };
+    outgoingEdge.forEach((ed) => {
+      const index = getNodes.value.findIndex(
+        (nod) => ed.targetNode.id == nod.id
+      );
+      row.data[index] = parseInt(ed.label?.toString() || "invalid");
+    });
+
+    if (isMin) {
+      for (let i = 0; i < nodes.length; i++) {
+        if (!row.data[i]) row.data[i] = Infinity;
+      }
+    } else {
+      for (let i = 0; i < nodes.length; i++) {
+        if (!row.data[i]) row.data[i] = -Infinity;
+      }
+    }
+
+    return row;
+  });
+
+  return {
+    title: "Matrice D1",
+    rows: rows,
+  };
+}
+console.log(createInitialMatrix(true));
 
 function connect(from: string, to: string, val: number) {
   addEdges({
