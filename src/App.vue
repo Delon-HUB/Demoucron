@@ -184,6 +184,13 @@ function solve(isMin: boolean) {
       matrixList.value[matrixList.value.length - 1]
     );
   console.log(path);
+
+  for (let i = 0; i < path.length; i++) {
+    const edge = getEdges.value.find(
+      (edge) => edge.id == `${path[i] + 1}->${path[i + 1] + 1}`
+    );
+    if (edge) edge.style = { strokeWidth: 6, stroke: "#3498db" };
+  }
 }
 
 function connect(from: string, to: string, val: number) {
