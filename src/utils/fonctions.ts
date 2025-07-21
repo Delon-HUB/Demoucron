@@ -1,8 +1,5 @@
 import _ from "lodash";
-import {
-  IMatrix,
-  INodeIncomingAndOutgoingEdge,
-} from "../Models/table";
+import { IMatrix, INodeIncomingAndOutgoingEdge } from "../Models/table";
 
 export function getEdgeOfNode(
   nodeId: number,
@@ -58,4 +55,36 @@ export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
   }
 
   return matrixList;
+}
+
+export function searchMinPath(
+  fromIndex: number,
+  toIndex: number,
+  lastMatrix: IMatrix
+): number[] {
+  let path: number[] = [toIndex];
+
+  const pathLength = lastMatrix.rows[fromIndex].data[toIndex];
+  const isAccessible = pathLength && pathLength != (Infinity || -Infinity);
+  if (!isAccessible) return [];
+
+  while (path[0] != fromIndex) {
+    let min = Infinity;
+    let predecessor = path[0];
+
+    for (let i = 0; i < lastMatrix.rows.length; i++) {
+      const val = lastMatrix.rows[i].data[path[0]];
+      let minTmp = Math.min(val, min);
+      if (minTmp != Infinity && minTmp != min) {
+        min = minTmp;
+        predecessor = i;
+      }
+    }
+
+    if (min == Infinity) break;
+
+    path.unshift(predecessor);
+  }
+
+  return path;
 }
