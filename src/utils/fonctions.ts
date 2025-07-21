@@ -108,3 +108,54 @@ export function searchMinPath(
 
   return path;
 }
+
+export function searchMaxPath(
+  fromIndex: number,
+  toIndex: number,
+  firstMatrix: IMatrix,
+  lastMatrix: IMatrix
+) {
+  let path: number[] = [fromIndex];
+  const isAccessible = lastMatrix.rows[fromIndex].data[toIndex] != -Infinity;
+  if (!isAccessible) return [];
+  const excludes: number[] = [
+    -Infinity,
+    lastMatrix.rows[fromIndex].data[toIndex],
+  ];
+
+  let coordonate: { row: number; col: number } = {
+    row: fromIndex,
+    col: toIndex,
+  };
+
+  while (path[0] != toIndex) {
+    const isDirectPath =
+      firstMatrix.rows[coordonate.row].data[toIndex] ==
+      lastMatrix.rows[coordonate.row].data[toIndex];
+    if (isDirectPath) {
+      path.push(toIndex);
+      break;
+    }
+
+    const index = indexOfMaxInColumn(toIndex, lastMatrix, excludes);
+    if (index == -1) {
+      path.push(toIndex);
+      break;
+    }
+    const max = lastMatrix.rows[index].data[toIndex];
+    excludes.push(max);
+
+    const result =
+      lastMatrix.rows[coordonate.row].data[toIndex] -
+      lastMatrix.rows[index].data[toIndex];
+
+    for (const row of lastMatrix.rows) {
+      if (row.data[index] == result) {
+        path.push(index);
+        coordonate.row = index;
+        break;
+      }
+    }
+  }
+  return path;
+}
