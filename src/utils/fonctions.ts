@@ -23,6 +23,26 @@ export function getEdgeOfNode(
   return incomingAndOutgoing;
 }
 
+export function indexOfMaxInColumn(
+  column: number,
+  matrix: IMatrix,
+  exclude?: number[]
+): number {
+  let max: number = -Infinity;
+  let indexOfMax: number = -1;
+  for (let i = 0; i < matrix.rows.length; i++) {
+    const currentVal = matrix.rows[i].data[column];
+    if (exclude?.includes(currentVal)) {
+      continue;
+    } else if (Math.max(currentVal, max) == currentVal) {
+      max = currentVal;
+      indexOfMax = i;
+    }
+  }
+
+  return indexOfMax;
+}
+
 export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
   const matrixList: IMatrix[] = [];
   matrixList.push(initMatrix);
