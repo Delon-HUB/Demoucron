@@ -32,6 +32,7 @@
                     no-caps
                     label="Maximum"
                     icon="arrow_upward"
+                    @click="solve(false)"
                   />
                 </q-btn-group>
               </div>
@@ -94,7 +95,7 @@ import { ref } from "vue";
 import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
 import CustomTable from "./components/CustomTable.vue";
-import { demoucron, searchMinPath } from "./utils/fonctions";
+import { demoucron, searchMaxPath, searchMinPath } from "./utils/fonctions";
 
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
@@ -181,6 +182,13 @@ function solve(isMin: boolean) {
     path = searchMinPath(
       0,
       getNodes.value.length - 1,
+      matrixList.value[matrixList.value.length - 1]
+    );
+  else
+    path = searchMaxPath(
+      0,
+      5,
+      matrixList.value[0],
       matrixList.value[matrixList.value.length - 1]
     );
   console.log(path);
