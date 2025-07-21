@@ -1,5 +1,5 @@
 export interface IRow {
-  rowName?: string[];
+  name: string;
   data: number[];
 }
 
