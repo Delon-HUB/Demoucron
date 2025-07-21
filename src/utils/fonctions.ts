@@ -29,6 +29,7 @@ export function getEdgeOfNode(
 export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
   const matrixList: IMatrix[] = [];
   matrixList.push(initMatrix);
+  matrixList[0].title = "Matrice D1";
 
   for (let i = 0; i < initMatrix.rows.length; i++) {
     const lastMatrix = matrixList[matrixList.length - 1];
@@ -38,16 +39,16 @@ export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
       edgeOfThisNode.outgoing.length > 0
     ) {
       const nextMatrix: IMatrix = _.cloneDeep(lastMatrix);
-
+      nextMatrix.title = `Matrice D${i + 1}`;
       edgeOfThisNode.Incoming.forEach((incoming) => {
         edgeOfThisNode.outgoing.forEach((outgoing) => {
-          const w =
+          const distance =
             lastMatrix.rows[incoming].data[edgeOfThisNode.nodeId] +
             lastMatrix.rows[edgeOfThisNode.nodeId].data[outgoing];
 
           const val = isMin
-            ? Math.min(w, lastMatrix.rows[incoming].data[outgoing])
-            : Math.max(w, lastMatrix.rows[incoming].data[outgoing]);
+            ? Math.min(distance, lastMatrix.rows[incoming].data[outgoing])
+            : Math.max(distance, lastMatrix.rows[incoming].data[outgoing]);
           nextMatrix.rows[incoming].data[outgoing] = val;
         });
       });
@@ -55,5 +56,6 @@ export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
       matrixList.push(nextMatrix);
     }
   }
+
   return matrixList;
 }
