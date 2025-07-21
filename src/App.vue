@@ -25,7 +25,6 @@
                     no-caps
                     label="Minimum"
                     icon="arrow_downward"
-                    @click="min"
                   />
                   <q-btn
                     class="text-bold"
@@ -63,7 +62,7 @@
       <q-page-container>
         <q-page>
           <div class="graphContainer">
-            <VueFlow :nodes="nodeList">
+            <VueFlow>
               <Background class="background" />
               <template #node-custom="props">
                 <CustomNode v-bind="props" />
@@ -92,12 +91,8 @@ import { Edge, Node, useVueFlow, VueFlow } from "@vue-flow/core";
 import CustomNode from "./components/CustomNode.vue";
 import { ref } from "vue";
 import { Background } from "@vue-flow/background";
-import { IMatrix, IRow } from "./Models/table";
+import { IMatrix } from "./Models/table";
 import CustomTable from "./components/CustomTable.vue";
-import { demoucronMin } from "./utils/fonctions";
-
-const model = ref(null);
-const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"]);
 
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
@@ -105,100 +100,6 @@ const matrixList = ref<IMatrix[]>([]);
 const { onConnect, addEdges, getNodes, getEdges, onNodesChange } = useVueFlow();
 const nodeCompter = ref(0);
 const nodeList = ref<Node[]>([]);
-
-function min() {
-  getEdges.value.forEach((edge) => {
-    edge.style = { strokeWidth: 6 };
-  });
-
-  matrixList.value = demoucronMin(createInitialMatrix());
-  let rowsName: string[] = nodeList.value.map((node) => node.data.label);
-
-  matrixList.value.forEach((matrix, index) => {
-    matrix.title = `Matrice D${index + 1}`;
-    matrix.rows.forEach((row) => (row.rowName = rowsName));
-  });
-
-  const paths = searchPath(
-    nodeList.value[0],
-    nodeList.value[nodeList.value.length - 1]
-  );
-
-  paths.forEach((edge) => {
-    const found = getEdges.value.find((ed) => ed.id == edge.id);
-    if (found) found.style = { strokeWidth: 6, stroke: "greenyellow" };
-  });
-}
-
-function searchPath(from: Node, to: Node): Edge[] {
-  const lastMatrix = matrixList.value[matrixList.value.length - 1];
-  const firstMatrix = matrixList.value[0];
-  const pathNode: Node[] = [to];
-  const edgePath: Edge[] = [];
-
-  const sourceIndex = nodeList.value.findIndex((node) => node.id == from.id);
-  let destIndex = nodeList.value.findIndex((node) => node.id == to.id);
-
-  let lengthOfDestination = lastMatrix.rows[sourceIndex].data[destIndex];
-  if (lengthOfDestination && lengthOfDestination != Infinity) {
-    while (pathNode[0] != from) {
-      destIndex = nodeList.value.findIndex(
-        (node) => node.id == pathNode[0]?.id
-      );
-
-      const isDirectPath =
-        firstMatrix.rows[sourceIndex].data[destIndex] ==
-        lastMatrix.rows[sourceIndex].data[destIndex];
-
-      if (isDirectPath) {
-        pathNode.unshift(from);
-      } else {
-        let minVal: { rowId: number; val: number } = {
-          rowId: -1,
-          val: Infinity,
-        };
-
-        for (let i = 0; i < lastMatrix.rows.length; i++) {
-          let currentVal: number = lastMatrix.rows[i].data[destIndex];
-          let tmpMinVal = Math.min(minVal.val, currentVal);
-          if (tmpMinVal == currentVal) {
-            minVal.val = currentVal;
-            minVal.rowId = i;
-          }
-          const isValidPredecessor = !lastMatrix.rows
-            .map((row) => row.data[minVal.rowId])
-            .every((val) => val == Infinity);
-
-          if (!isValidPredecessor) {
-            minVal.rowId = -1;
-            minVal.val = Infinity;
-            for (let j = 0; j < lastMatrix.rows.length; j++) {
-              if (j == i) continue;
-              currentVal = lastMatrix.rows[j].data[destIndex];
-              tmpMinVal = Math.min(minVal.val, currentVal);
-              if (tmpMinVal == currentVal) {
-                minVal.val = currentVal;
-                minVal.rowId = j;
-              }
-            }
-          }
-        }
-        pathNode.unshift(nodeList.value[minVal.rowId]);
-      }
-    }
-
-    getEdges.value.forEach((ed) => {
-      for (let i = 0; i < pathNode.length; i++) {
-        if (
-          ed.sourceNode?.id == pathNode[i]?.id &&
-          ed.targetNode?.id == pathNode[i + 1]?.id
-        )
-          edgePath.push(ed);
-      }
-    });
-  }
-  return edgePath;
-}
 
 function generateNode() {
   const newNode = {
@@ -240,36 +141,6 @@ onNodesChange((param) => {
     }
   });
 });
-
-function createInitialMatrix() {
-  const edges = getEdges.value;
-  const nodes = getNodes.value;
-
-  const rows: IRow[] = nodes.map((node) => {
-    const edgesFound = edges.filter((edge) => edge.sourceNode == node);
-    const row: IRow = {
-      data: [],
-    };
-
-    edgesFound.forEach((ed) => {
-      const index = nodeList.value.findIndex(
-        (nod) => ed.targetNode.id == nod.id
-      );
-      row.data[index] = parseInt(ed.label?.toString() || "invalid");
-    });
-
-    for (let i = 0; i < nodes.length; i++) {
-      if (!row.data[i]) row.data[i] = Infinity;
-    }
-
-    return row;
-  });
-
-  return {
-    title: "",
-    rows: rows,
-  };
-}
 </script>
 
 <style scoped>
