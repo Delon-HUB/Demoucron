@@ -115,6 +115,21 @@ function generateNode() {
   addNodes(newNode);
 }
 
+function example() {
+  for (let i = 0; i < 6; i++) generateNode();
+  connect(getNodes.value[0].id, getNodes.value[1].id, 3);
+  connect(getNodes.value[0].id, getNodes.value[2].id, 8);
+  connect(getNodes.value[0].id, getNodes.value[3].id, 6);
+  connect(getNodes.value[1].id, getNodes.value[4].id, 2);
+  connect(getNodes.value[1].id, getNodes.value[4].id, 6);
+  connect(getNodes.value[1].id, getNodes.value[3].id, 2);
+  connect(getNodes.value[2].id, getNodes.value[4].id, 1);
+  connect(getNodes.value[3].id, getNodes.value[2].id, 2);
+  connect(getNodes.value[3].id, getNodes.value[5].id, 7);
+  connect(getNodes.value[4].id, getNodes.value[5].id, 2);
+}
+example();
+
 function connect(from: string, to: string, val: number) {
   addEdges({
     id: `${from}->${to}`,
