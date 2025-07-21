@@ -49,23 +49,22 @@ export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
   matrixList[0].title = "Matrice D1";
 
   for (let i = 0; i < initMatrix.rows.length; i++) {
-    const lastMatrix = matrixList[matrixList.length - 1];
-    const edgeOfThisNode = getEdgeOfNode(i, lastMatrix);
-    if (
-      edgeOfThisNode.Incoming.length > 0 &&
-      edgeOfThisNode.outgoing.length > 0
-    ) {
-      const nextMatrix: IMatrix = _.cloneDeep(lastMatrix);
+    const previousMatrix = matrixList[matrixList.length - 1];
+    const edgeOfThisNode = getEdgeOfNode(i, previousMatrix);
+    const isValid_K =
+      edgeOfThisNode.Incoming.length > 0 && edgeOfThisNode.outgoing.length > 0;
+    if (isValid_K) {
+      const nextMatrix: IMatrix = _.cloneDeep(previousMatrix);
       nextMatrix.title = `Matrice D${i + 1}`;
       edgeOfThisNode.Incoming.forEach((incoming) => {
         edgeOfThisNode.outgoing.forEach((outgoing) => {
           const distance =
-            lastMatrix.rows[incoming].data[edgeOfThisNode.nodeId] +
-            lastMatrix.rows[edgeOfThisNode.nodeId].data[outgoing];
+            previousMatrix.rows[incoming].data[edgeOfThisNode.nodeId] +
+            previousMatrix.rows[edgeOfThisNode.nodeId].data[outgoing];
 
           const val = isMin
-            ? Math.min(distance, lastMatrix.rows[incoming].data[outgoing])
-            : Math.max(distance, lastMatrix.rows[incoming].data[outgoing]);
+            ? Math.min(distance, previousMatrix.rows[incoming].data[outgoing])
+            : Math.max(distance, previousMatrix.rows[incoming].data[outgoing]);
           nextMatrix.rows[incoming].data[outgoing] = val;
         });
       });

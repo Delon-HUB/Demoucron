@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { Edge, Node, useVueFlow, VueFlow } from "@vue-flow/core";
+import { useVueFlow, VueFlow } from "@vue-flow/core";
 import CustomNode from "./components/CustomNode.vue";
 import { ref } from "vue";
 import { Background } from "@vue-flow/background";
@@ -100,8 +100,7 @@ import { demoucron, searchMaxPath, searchMinPath } from "./utils/fonctions";
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
 
-const { onConnect, addEdges, addNodes, getNodes, getEdges, onNodesChange } =
-  useVueFlow();
+const { onConnect, addEdges, addNodes, getNodes, getEdges } = useVueFlow();
 const nodeCompter = ref(0);
 
 function generateNode() {
