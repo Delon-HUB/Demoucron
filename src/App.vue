@@ -25,6 +25,7 @@
                     no-caps
                     label="Minimum"
                     icon="arrow_downward"
+                    @click="solve(true)"
                   />
                   <q-btn
                     class="text-bold"
@@ -93,6 +94,7 @@ import { ref } from "vue";
 import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
 import CustomTable from "./components/CustomTable.vue";
+import { demoucron, searchMinPath } from "./utils/fonctions";
 
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
@@ -166,6 +168,23 @@ function createInitialMatrix(isMin: boolean) {
   };
 }
 console.log(createInitialMatrix(true));
+
+function solve(isMin: boolean) {
+  getEdges.value.forEach((edge) => {
+    edge.style = { strokeWidth: 6 };
+  });
+  const initMatrix = createInitialMatrix(isMin);
+  matrixList.value = demoucron(isMin, initMatrix);
+
+  let path: number[] = [];
+  if (isMin)
+    path = searchMinPath(
+      0,
+      getNodes.value.length - 1,
+      matrixList.value[matrixList.value.length - 1]
+    );
+  console.log(path);
+}
 
 function connect(from: string, to: string, val: number) {
   addEdges({
