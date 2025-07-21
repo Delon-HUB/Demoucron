@@ -97,7 +97,8 @@ import CustomTable from "./components/CustomTable.vue";
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
 
-const { onConnect, addEdges, addNodes,getNodes, getEdges, onNodesChange } = useVueFlow();
+const { onConnect, addEdges, addNodes, getNodes, getEdges, onNodesChange } =
+  useVueFlow();
 const nodeCompter = ref(0);
 
 function generateNode() {
@@ -114,10 +115,29 @@ function generateNode() {
   addNodes(newNode);
 }
 
+function connect(from: string, to: string, val: number) {
+  addEdges({
+    id: `${from}->${to}`,
+    source: from,
+    target: to,
+    data: {
+      label: val.toString(),
+    },
+    style: { strokeWidth: 6 },
+    type: "simplebezier",
+    label: val.toString(),
+    animated: true,
+    labelStyle: {
+      fontSize: "16px",
+    },
+  });
+}
+
 onConnect((params) => {
   const val = parseInt(prompt("Valeur de l'arc") || "invalid");
   if (val && val > 0) {
     addEdges({
+      id: `${params.source}->${params.target}`,
       ...params,
       style: { strokeWidth: 6 },
       type: "simplebezier",
@@ -129,7 +149,6 @@ onConnect((params) => {
     });
   }
 });
-
 </script>
 
 <style scoped>
