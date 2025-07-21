@@ -168,7 +168,6 @@ function createInitialMatrix(isMin: boolean) {
     rows: rows,
   };
 }
-console.log(createInitialMatrix(true));
 
 function solve(isMin: boolean) {
   getEdges.value.forEach((edge) => {
@@ -191,7 +190,6 @@ function solve(isMin: boolean) {
       matrixList.value[0],
       matrixList.value[matrixList.value.length - 1]
     );
-  console.log(path);
 
   for (let i = 0; i < path.length; i++) {
     const edge = getEdges.value.find(
