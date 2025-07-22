@@ -118,7 +118,7 @@ function generateNode() {
 }
 
 function example() {
-  for (let i = 0; i < 6; i++) generateNode();
+  for (let i = 0; i < 8; i++) generateNode();
   connect(getNodes.value[0].id, getNodes.value[1].id, 3);
   connect(getNodes.value[0].id, getNodes.value[2].id, 8);
   connect(getNodes.value[0].id, getNodes.value[3].id, 6);
@@ -129,6 +129,10 @@ function example() {
   connect(getNodes.value[3].id, getNodes.value[2].id, 2);
   connect(getNodes.value[3].id, getNodes.value[5].id, 7);
   connect(getNodes.value[4].id, getNodes.value[5].id, 2);
+
+  connect(getNodes.value[2].id, getNodes.value[6].id, 5);
+  connect(getNodes.value[6].id, getNodes.value[7].id, 5);
+  connect(getNodes.value[7].id, getNodes.value[4].id, 4);
 }
 example();
 
@@ -185,10 +189,12 @@ function solve(isMin: boolean) {
   else
     path = searchMaxPath(
       0,
-      5,
+      getNodes.value.length - 1,
       matrixList.value[0],
       matrixList.value[matrixList.value.length - 1]
     );
+
+  console.log(path);
 
   for (let i = 0; i < path.length; i++) {
     const edge = getEdges.value.find(

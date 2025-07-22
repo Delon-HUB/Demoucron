@@ -127,7 +127,7 @@ export function searchMaxPath(
     col: toIndex,
   };
 
-  while (path[0] != toIndex) {
+  while (path[path.length - 1] != toIndex) {
     const isDirectPath =
       firstMatrix.rows[coordonate.row].data[toIndex] ==
       lastMatrix.rows[coordonate.row].data[toIndex];
