@@ -6,7 +6,7 @@
           <q-toolbar-title class="text-bold text-right text-uppercase">
             <div class="text-left">
               <q-avatar>
-                <img src="/src/assets/brain_icon.png" />
+                <img alt="brain icon" src="/src/assets/brain_icon.png" />
               </q-avatar>
               <span class="title-princ text-h5">Algorithme de Demoucron</span>
               <div class="q-pr-md text-white">
@@ -45,15 +45,12 @@
         <q-scroll-area class="fit approach">
           <q-list padding class="menu-list">
             <q-item clickable v-ripple v-for="i in matrixList.length">
-              <div v-if="matrixList.length == 1">
-                <CustomTable :matrix="matrixList[i - 1]" />
-              </div>
               <div class="row" v-if="matrixList[i]">
                 <div class="col">
-                  <CustomTable :matrix="matrixList[i - 1]" />
+                  <Matrix :data="matrixList[i - 1]" />
                 </div>
                 <div class="col">
-                  <CustomTable :matrix="matrixList[i]" />
+                  <Matrix :data="matrixList[i]" />
                 </div>
               </div>
             </q-item>
@@ -94,7 +91,7 @@ import CustomNode from "./components/CustomNode.vue";
 import { ref } from "vue";
 import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
-import CustomTable from "./components/CustomTable.vue";
+import Matrix from "./components/Matrix.vue";
 import { demoucron, searchMaxPath, searchMinPath } from "./utils/fonctions";
 
 const drawer = ref(false);
@@ -189,8 +186,6 @@ function solve(isMin: boolean) {
       matrixList.value[0],
       matrixList.value[matrixList.value.length - 1]
     );
-
-  console.log(path);
 
   for (let i = 0; i < path.length; i++) {
     const edge = getEdges.value.find(
