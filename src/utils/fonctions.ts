@@ -58,7 +58,7 @@ export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
 
     if (isValid_K) {
       const nextMatrix: IMatrix = _.cloneDeep(previousMatrix);
-      nextMatrix.title = `Matrice D${i + 1}`;
+      nextMatrix.title = `Matrice D${matrixList.length + 1}`;
       edgeOfThisNode.Incoming.forEach((incoming) => {
         edgeOfThisNode.outgoing.forEach((outgoing) => {
           const distance =
