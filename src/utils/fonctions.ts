@@ -12,10 +12,12 @@ export function getEdgeOfNode(
   };
 
   for (let i = 0; i < matrix.rows.length; i++) {
-    if (matrix.rows[i].data[nodeId] != (Infinity | -Infinity)) {
+    const val1 = matrix.rows[i].data[nodeId];
+    if (val1 != -Infinity && val1 != Infinity) {
       incomingAndOutgoing.Incoming.push(i);
     }
-    if (matrix.rows[nodeId].data[i] != (Infinity | -Infinity)) {
+    const val2 = matrix.rows[nodeId].data[i];
+    if (val2 != -Infinity && val2 != Infinity) {
       incomingAndOutgoing.outgoing.push(i);
     }
   }
@@ -53,6 +55,7 @@ export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
     const edgeOfThisNode = getEdgeOfNode(i, previousMatrix);
     const isValid_K =
       edgeOfThisNode.Incoming.length > 0 && edgeOfThisNode.outgoing.length > 0;
+
     if (isValid_K) {
       const nextMatrix: IMatrix = _.cloneDeep(previousMatrix);
       nextMatrix.title = `Matrice D${i + 1}`;
