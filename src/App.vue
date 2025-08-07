@@ -53,6 +53,9 @@
                   <Matrix :data="matrixList[i]" />
                 </div>
               </div>
+              <div class="col" v-else>
+                <Matrix :data="matrixList[i - 1]" />
+              </div>
             </q-item>
           </q-list>
         </q-scroll-area>
