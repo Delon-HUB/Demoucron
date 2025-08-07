@@ -53,7 +53,7 @@
                   <Matrix :data="matrixList[i]" />
                 </div>
               </div>
-              <div class="col" v-else>
+              <div class="col" v-if="matrixList.length == 1">
                 <Matrix :data="matrixList[i - 1]" />
               </div>
             </q-item>
