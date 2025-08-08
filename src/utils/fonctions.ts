@@ -28,24 +28,44 @@ export function getEdgeOfNode(
 export function indexOfMaxInColumn(
   column: number,
   matrix: IMatrix,
-  exclude?: number[]
+  excludeIndex?: number[]
 ): number {
   let max: number = -Infinity;
   let indexOfMax: number = -1;
   for (let i = 0; i < matrix.rows.length; i++) {
-    const currentVal = matrix.rows[i].data[column];
-    if (exclude?.includes(currentVal)) {
-      continue;
-    } else if (Math.max(currentVal, max) == currentVal) {
-      max = currentVal;
-      indexOfMax = i;
+    if (!excludeIndex?.includes(i)) {
+      const currentVal = matrix.rows[i].data[column];
+      if (Math.max(currentVal, max) == currentVal) {
+        max = currentVal;
+        indexOfMax = i;
+      }
     }
   }
 
   return indexOfMax;
 }
 
-function transposedOfMatrix(matrix: IMatrix): IMatrix {
+export function indexOfMinInColumn(
+  column: number,
+  matrix: IMatrix,
+  exclude?: number[]
+): number {
+  let min: number = Infinity;
+  let indexOfMin: number = -1;
+  for (let i = 0; i < matrix.rows.length; i++) {
+    const currentVal = matrix.rows[i].data[column];
+    if (exclude?.includes(currentVal)) {
+      continue;
+    } else if (Math.min(currentVal, min) == currentVal) {
+      indexOfMin = min != currentVal ? i : indexOfMin;
+      min = currentVal;
+    }
+  }
+
+  return indexOfMin;
+}
+
+export function transposedOfMatrix(matrix: IMatrix): IMatrix {
   const length = matrix.rows.length;
   let transposedMatrix: IMatrix = _.cloneDeep(matrix);
   for (let rowIndex = 0; rowIndex < length; rowIndex++) {
@@ -124,6 +144,36 @@ export function searchMinPath(
   return path;
 }
 
+// export function searchMaxPath(
+//   fromIndex: number,
+//   toIndex: number,
+//   lastMatrix: IMatrix
+// ) {
+//   const isAccessible = lastMatrix.rows[fromIndex].data[toIndex] != -Infinity;
+//   if (!isAccessible) return [];
+
+//   const transposedMatrix: IMatrix = transposedOfMatrix(lastMatrix);
+//   let path: number[] = [fromIndex];
+//   let lastPathFound = fromIndex;
+
+//   while (lastPathFound != toIndex) {
+//     const nextPath = indexOfMinInColumn(lastPathFound, transposedMatrix, [
+//       -Infinity,
+//     ]);
+//     if (nextPath != -1)
+//       console.log(
+//         `Minimum dans col X${lastPathFound + 1} = ${
+//           transposedMatrix?.rows[nextPath].data[lastPathFound]
+//         }`
+//       );
+//     if (nextPath == -1) return [];
+//     lastPathFound = nextPath;
+//     path.push(nextPath);
+//   }
+//   path.push(toIndex);
+//   return path;
+// }
+
 export function searchMaxPath(
   fromIndex: number,
   toIndex: number,
@@ -133,15 +183,12 @@ export function searchMaxPath(
   let path: number[] = [fromIndex];
   const isAccessible = lastMatrix.rows[fromIndex].data[toIndex] != -Infinity;
   if (!isAccessible) return [];
-  const excludes: number[] = [
-    -Infinity,
-    lastMatrix.rows[fromIndex].data[toIndex],
-  ];
 
   let coordonate: { row: number; col: number } = {
     row: fromIndex,
     col: toIndex,
   };
+  const excludeIndex: number[] = [fromIndex];
 
   while (path[path.length - 1] != toIndex) {
     const isDirectPath =
@@ -151,14 +198,11 @@ export function searchMaxPath(
       path.push(toIndex);
       break;
     }
-
-    const index = indexOfMaxInColumn(toIndex, lastMatrix, excludes);
+    const index = indexOfMaxInColumn(toIndex, lastMatrix, excludeIndex);
     if (index == -1) {
       path.push(toIndex);
       break;
     }
-    const max = lastMatrix.rows[index].data[toIndex];
-    excludes.push(max);
 
     const result =
       lastMatrix.rows[coordonate.row].data[toIndex] -
@@ -166,11 +210,15 @@ export function searchMaxPath(
 
     for (const row of lastMatrix.rows) {
       if (row.data[index] == result) {
-        path.push(index);
-        coordonate.row = index;
-        break;
+        if (firstMatrix.rows[path[path.length - 1]].data[index] != -Infinity) {
+          path.push(index);
+          coordonate.row = index;
+          break;
+        }
       }
     }
+    excludeIndex.push(index);
   }
+
   return path;
 }

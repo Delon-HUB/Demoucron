@@ -57,6 +57,17 @@
                 <Matrix :data="matrixList[i - 1]" />
               </div>
             </q-item>
+            <div
+              class="row"
+              v-if="transposedMatrixInitial && transposedMatrixFinal"
+            >
+              <div class="col">
+                <Matrix :data="transposedMatrixInitial" />
+              </div>
+              <div class="col">
+                <Matrix :data="transposedMatrixFinal" />
+              </div>
+            </div>
           </q-list>
         </q-scroll-area>
       </q-drawer>
@@ -95,7 +106,12 @@ import { ref } from "vue";
 import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
 import Matrix from "./components/Matrix.vue";
-import { demoucron, searchMaxPath, searchMinPath } from "./utils/fonctions";
+import {
+  demoucron,
+  searchMaxPath,
+  searchMinPath,
+  transposedOfMatrix,
+} from "./utils/fonctions";
 
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
@@ -192,6 +208,8 @@ function createInitialMatrix(isMin: boolean) {
     rows: rows,
   };
 }
+const transposedMatrixInitial = ref<IMatrix>();
+const transposedMatrixFinal = ref<IMatrix>();
 
 function solve(isMin: boolean) {
   getEdges.value.forEach((edge) => {
@@ -214,6 +232,11 @@ function solve(isMin: boolean) {
       matrixList.value[0],
       matrixList.value[matrixList.value.length - 1]
     );
+  // transposedMatrixInitial.value = transposedOfMatrix(matrixList.value[0]);
+  // transposedMatrixFinal.value = transposedOfMatrix(
+  //   matrixList.value[matrixList.value.length - 1]
+  // );
+  // console.log("cjfaskdlfjalfdkjalk");
 
   for (let i = 0; i < path.length; i++) {
     const edge = getEdges.value.find(
