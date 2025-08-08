@@ -45,6 +45,19 @@ export function indexOfMaxInColumn(
   return indexOfMax;
 }
 
+function transposedOfMatrix(matrix: IMatrix): IMatrix {
+  const length = matrix.rows.length;
+  let transposedMatrix: IMatrix = _.cloneDeep(matrix);
+  for (let rowIndex = 0; rowIndex < length; rowIndex++) {
+    for (let colIndex = 0; colIndex < length; colIndex++) {
+      transposedMatrix.rows[colIndex].data[rowIndex] =
+        matrix.rows[rowIndex].data[colIndex];
+    }
+  }
+
+  return transposedMatrix;
+}
+
 export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
   const matrixList: IMatrix[] = [];
   matrixList.push(initMatrix);
