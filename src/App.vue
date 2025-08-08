@@ -118,17 +118,42 @@ function generateNode() {
 }
 
 function example() {
-  for (let i = 0; i < 6; i++) generateNode();
+  for (let i = 0; i < 12; i++) generateNode();
   connect(getNodes.value[0].id, getNodes.value[1].id, 3);
-  connect(getNodes.value[0].id, getNodes.value[2].id, 8);
-  connect(getNodes.value[0].id, getNodes.value[3].id, 6);
-  connect(getNodes.value[1].id, getNodes.value[4].id, 2);
-  connect(getNodes.value[1].id, getNodes.value[4].id, 6);
-  connect(getNodes.value[1].id, getNodes.value[3].id, 2);
-  connect(getNodes.value[2].id, getNodes.value[4].id, 1);
-  connect(getNodes.value[3].id, getNodes.value[2].id, 2);
-  connect(getNodes.value[3].id, getNodes.value[5].id, 7);
-  connect(getNodes.value[4].id, getNodes.value[5].id, 2);
+  connect(getNodes.value[0].id, getNodes.value[3].id, 9);
+  connect(getNodes.value[0].id, getNodes.value[2].id, 3);
+
+  connect(getNodes.value[1].id, getNodes.value[4].id, 9);
+  connect(getNodes.value[1].id, getNodes.value[3].id, 7);
+  connect(getNodes.value[1].id, getNodes.value[5].id, 1);
+
+  connect(getNodes.value[2].id, getNodes.value[3].id, 2);
+  connect(getNodes.value[2].id, getNodes.value[6].id, 2);
+
+  connect(getNodes.value[3].id, getNodes.value[4].id, 2);
+  connect(getNodes.value[3].id, getNodes.value[7].id, 3);
+  connect(getNodes.value[3].id, getNodes.value[5].id, 3);
+  connect(getNodes.value[3].id, getNodes.value[6].id, 1);
+
+  connect(getNodes.value[4].id, getNodes.value[7].id, 5);
+
+  connect(getNodes.value[5].id, getNodes.value[7].id, 4);
+  connect(getNodes.value[5].id, getNodes.value[8].id, 2);
+  connect(getNodes.value[5].id, getNodes.value[9].id, 5);
+
+  connect(getNodes.value[6].id, getNodes.value[5].id, 5);
+  connect(getNodes.value[6].id, getNodes.value[9].id, 3);
+  connect(getNodes.value[6].id, getNodes.value[10].id, 11);
+
+  connect(getNodes.value[7].id, getNodes.value[8].id, 6);
+
+  connect(getNodes.value[8].id, getNodes.value[11].id, 8);
+  connect(getNodes.value[8].id, getNodes.value[9].id, 2);
+
+  connect(getNodes.value[9].id, getNodes.value[11].id, 4);
+
+  connect(getNodes.value[10].id, getNodes.value[9].id, 4);
+  connect(getNodes.value[10].id, getNodes.value[11].id, 5);
 }
 example();
 
