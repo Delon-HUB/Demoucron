@@ -242,7 +242,7 @@ function solve(isMin: boolean) {
     const edge = getEdges.value.find(
       (edge) => edge.id == `${path[i] + 1}->${path[i + 1] + 1}`
     );
-    if (edge) edge.style = { strokeWidth: 6, stroke: "#3498db" };
+    if (edge) edge.style = { strokeWidth: 6, stroke: "#fd151b" };
   }
 }
 
