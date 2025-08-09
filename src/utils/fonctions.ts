@@ -144,36 +144,6 @@ export function searchMinPath(
   return path;
 }
 
-// export function searchMaxPath(
-//   fromIndex: number,
-//   toIndex: number,
-//   lastMatrix: IMatrix
-// ) {
-//   const isAccessible = lastMatrix.rows[fromIndex].data[toIndex] != -Infinity;
-//   if (!isAccessible) return [];
-
-//   const transposedMatrix: IMatrix = transposedOfMatrix(lastMatrix);
-//   let path: number[] = [fromIndex];
-//   let lastPathFound = fromIndex;
-
-//   while (lastPathFound != toIndex) {
-//     const nextPath = indexOfMinInColumn(lastPathFound, transposedMatrix, [
-//       -Infinity,
-//     ]);
-//     if (nextPath != -1)
-//       console.log(
-//         `Minimum dans col X${lastPathFound + 1} = ${
-//           transposedMatrix?.rows[nextPath].data[lastPathFound]
-//         }`
-//       );
-//     if (nextPath == -1) return [];
-//     lastPathFound = nextPath;
-//     path.push(nextPath);
-//   }
-//   path.push(toIndex);
-//   return path;
-// }
-
 export function searchMaxPath(
   fromIndex: number,
   toIndex: number,

@@ -57,17 +57,6 @@
                 <Matrix :data="matrixList[i - 1]" />
               </div>
             </q-item>
-            <div
-              class="row"
-              v-if="transposedMatrixInitial && transposedMatrixFinal"
-            >
-              <div class="col">
-                <Matrix :data="transposedMatrixInitial" />
-              </div>
-              <div class="col">
-                <Matrix :data="transposedMatrixFinal" />
-              </div>
-            </div>
           </q-list>
         </q-scroll-area>
       </q-drawer>
@@ -133,46 +122,6 @@ function generateNode() {
   addNodes(newNode);
 }
 
-function example() {
-  for (let i = 0; i < 12; i++) generateNode();
-  connect(getNodes.value[0].id, getNodes.value[1].id, 3);
-  connect(getNodes.value[0].id, getNodes.value[3].id, 9);
-  connect(getNodes.value[0].id, getNodes.value[2].id, 3);
-
-  connect(getNodes.value[1].id, getNodes.value[4].id, 9);
-  connect(getNodes.value[1].id, getNodes.value[3].id, 7);
-  connect(getNodes.value[1].id, getNodes.value[5].id, 1);
-
-  connect(getNodes.value[2].id, getNodes.value[3].id, 2);
-  connect(getNodes.value[2].id, getNodes.value[6].id, 2);
-
-  connect(getNodes.value[3].id, getNodes.value[4].id, 2);
-  connect(getNodes.value[3].id, getNodes.value[7].id, 3);
-  connect(getNodes.value[3].id, getNodes.value[5].id, 3);
-  connect(getNodes.value[3].id, getNodes.value[6].id, 1);
-
-  connect(getNodes.value[4].id, getNodes.value[7].id, 5);
-
-  connect(getNodes.value[5].id, getNodes.value[7].id, 4);
-  connect(getNodes.value[5].id, getNodes.value[8].id, 2);
-  connect(getNodes.value[5].id, getNodes.value[9].id, 5);
-
-  connect(getNodes.value[6].id, getNodes.value[5].id, 5);
-  connect(getNodes.value[6].id, getNodes.value[9].id, 3);
-  connect(getNodes.value[6].id, getNodes.value[10].id, 11);
-
-  connect(getNodes.value[7].id, getNodes.value[8].id, 6);
-
-  connect(getNodes.value[8].id, getNodes.value[11].id, 8);
-  connect(getNodes.value[8].id, getNodes.value[9].id, 2);
-
-  connect(getNodes.value[9].id, getNodes.value[11].id, 4);
-
-  connect(getNodes.value[10].id, getNodes.value[9].id, 4);
-  connect(getNodes.value[10].id, getNodes.value[11].id, 5);
-}
-example();
-
 function createInitialMatrix(isMin: boolean) {
   const nodes = getNodes.value;
   const edges = getEdges.value;
@@ -208,8 +157,6 @@ function createInitialMatrix(isMin: boolean) {
     rows: rows,
   };
 }
-const transposedMatrixInitial = ref<IMatrix>();
-const transposedMatrixFinal = ref<IMatrix>();
 
 function solve(isMin: boolean) {
   getEdges.value.forEach((edge) => {
@@ -232,11 +179,6 @@ function solve(isMin: boolean) {
       matrixList.value[0],
       matrixList.value[matrixList.value.length - 1]
     );
-  // transposedMatrixInitial.value = transposedOfMatrix(matrixList.value[0]);
-  // transposedMatrixFinal.value = transposedOfMatrix(
-  //   matrixList.value[matrixList.value.length - 1]
-  // );
-  // console.log("cjfaskdlfjalfdkjalk");
 
   for (let i = 0; i < path.length; i++) {
     const edge = getEdges.value.find(
@@ -280,6 +222,46 @@ onConnect((params) => {
     });
   }
 });
+
+function exampleGraph() {
+  for (let i = 0; i < 12; i++) generateNode();
+  connect(getNodes.value[0].id, getNodes.value[1].id, 3);
+  connect(getNodes.value[0].id, getNodes.value[3].id, 9);
+  connect(getNodes.value[0].id, getNodes.value[2].id, 3);
+
+  connect(getNodes.value[1].id, getNodes.value[4].id, 9);
+  connect(getNodes.value[1].id, getNodes.value[3].id, 7);
+  connect(getNodes.value[1].id, getNodes.value[5].id, 1);
+
+  connect(getNodes.value[2].id, getNodes.value[3].id, 2);
+  connect(getNodes.value[2].id, getNodes.value[6].id, 2);
+
+  connect(getNodes.value[3].id, getNodes.value[4].id, 2);
+  connect(getNodes.value[3].id, getNodes.value[7].id, 3);
+  connect(getNodes.value[3].id, getNodes.value[5].id, 3);
+  connect(getNodes.value[3].id, getNodes.value[6].id, 1);
+
+  connect(getNodes.value[4].id, getNodes.value[7].id, 5);
+
+  connect(getNodes.value[5].id, getNodes.value[7].id, 4);
+  connect(getNodes.value[5].id, getNodes.value[8].id, 2);
+  connect(getNodes.value[5].id, getNodes.value[9].id, 5);
+
+  connect(getNodes.value[6].id, getNodes.value[5].id, 5);
+  connect(getNodes.value[6].id, getNodes.value[9].id, 3);
+  connect(getNodes.value[6].id, getNodes.value[10].id, 11);
+
+  connect(getNodes.value[7].id, getNodes.value[8].id, 6);
+
+  connect(getNodes.value[8].id, getNodes.value[11].id, 8);
+  connect(getNodes.value[8].id, getNodes.value[9].id, 2);
+
+  connect(getNodes.value[9].id, getNodes.value[11].id, 4);
+
+  connect(getNodes.value[10].id, getNodes.value[9].id, 4);
+  connect(getNodes.value[10].id, getNodes.value[11].id, 5);
+}
+exampleGraph();
 </script>
 
 <style scoped>
@@ -300,7 +282,6 @@ onConnect((params) => {
 }
 
 .background {
-  /* background: linear-gradient(to right, #eed991, #ccf7f4); */
   background: whitesmoke;
 }
 
