@@ -76,7 +76,12 @@
         <q-page>
           <div class="graphContainer">
             <VueFlow>
-              <Background class="background" />
+              <Background
+                variant="lines"
+                :gap="50"
+                :size="1"
+                style="background-color: #ffff"
+              />
               <template #node-custom="props">
                 <CustomNode v-bind="props" />
               </template>
@@ -106,12 +111,7 @@ import { ref } from "vue";
 import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
 import Matrix from "./components/Matrix.vue";
-import {
-  demoucron,
-  searchMaxPath,
-  searchMinPath,
-  transposedOfMatrix,
-} from "./utils/fonctions";
+import { demoucron, searchMaxPath, searchMinPath } from "./utils/fonctions";
 
 const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
