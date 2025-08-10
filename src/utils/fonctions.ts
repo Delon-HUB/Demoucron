@@ -178,15 +178,13 @@ export function searchMaxPath(
       lastMatrix.rows[coordonate.row].data[toIndex] -
       lastMatrix.rows[index].data[toIndex];
 
-    for (const row of lastMatrix.rows) {
-      if (row.data[index] == result) {
-        if (firstMatrix.rows[path[path.length - 1]].data[index] != -Infinity) {
-          path.push(index);
-          coordonate.row = index;
-          break;
-        }
-      }
+    const isLinkExist =
+      firstMatrix.rows[path[path.length - 1]].data[index] == result;
+    if (isLinkExist) {
+      path.push(index);
+      coordonate.row = index;
     }
+
     excludeIndex.push(index);
   }
 
