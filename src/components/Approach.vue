@@ -1,7 +1,7 @@
 <template>
   <q-scroll-area class="fit">
-    <q-list padding class="menu-list">
-      <q-item clickable v-ripple v-for="i in matrixList.length">
+    <q-list>
+      <q-item clickable v-ripple v-for="i in matrixList.length" class="box">
         <q-card v-if="matrixList[i]" flat>
           <q-card-section>
             <div>
@@ -13,9 +13,13 @@
                   <Matrix :data="matrixList[i]" />
                 </div>
               </div>
-              <div class="row q-mt-md">
-                <span style="text-decoration: underline">K = {{ i + 1 }}</span>
-
+              <p
+                class="text-bold text-center q-mt-md"
+                style="text-decoration: underline"
+              >
+                Pour K = {{ i + 1 }}
+              </p>
+              <div class="row">
                 <div class="col">
                   <ul v-for="incoming in k_list[i - 1].Incoming">
                     <li v-for="outgoing in k_list[i - 1].outgoing">
@@ -84,8 +88,16 @@
                             outgoing
                           ]
                         }}
-                        , {{ matrixList[i - 1].rows[incoming].data[outgoing] }})
-                        =
+                        ,
+                        {{
+                          matrixList[i - 1].rows[incoming].data[outgoing] ==
+                          -Infinity
+                            ? "-∞"
+                            : matrixList[i - 1].rows[incoming].data[outgoing] ==
+                              Infinity
+                            ? "+∞"
+                            : matrixList[i - 1].rows[incoming].data[outgoing]
+                        }}) =
                         {{
                           props.isMin
                             ? Math.min(
@@ -111,8 +123,7 @@
                 </div>
               </div>
             </div>
-
-            <div class="col" v-if="matrixList.length == 1">
+            <div v-if="matrixList.length == 1">
               <Matrix :data="matrixList[i - 1]" />
             </div>
           </q-card-section>
@@ -174,3 +185,37 @@ function solve(isMin: boolean, firstMatrix: IMatrix) {
   return matrixList;
 }
 </script>
+
+<style scoped lang="css">
+.box {
+  position: relative;
+  background: #f6f6f6;
+  border: 1px solid gray 05;
+  border-radius: 4px;
+  color: rgba(0, 0, 0, 0.8);
+  text-shadow: 0 1px 0 #fff;
+  line-height: 1.5;
+  margin: 32px auto;
+}
+
+.box::before,
+.box::after {
+  z-index: -1;
+  position: absolute;
+  content: "";
+  bottom: 15px;
+  left: 10px;
+  width: 50%;
+  top: 80%;
+  max-width: 300px;
+  background: rgba(0, 0, 0, 0);
+  box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+  transform: rotate(-3deg);
+}
+
+.box::after {
+  transform: rotate(3deg);
+  right: 10px;
+  left: auto;
+}
+</style>
