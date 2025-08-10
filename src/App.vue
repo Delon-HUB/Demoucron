@@ -41,21 +41,25 @@
         </q-toolbar>
       </q-header>
 
-      <q-drawer v-model="drawer" show-if-above :width="900">
+      <q-drawer v-model="drawer" :width="900">
         <q-scroll-area class="fit approach">
           <q-list padding class="menu-list">
             <q-item clickable v-ripple v-for="i in matrixList.length">
-              <div class="row" v-if="matrixList[i]">
-                <div class="col">
-                  <Matrix :data="matrixList[i - 1]" />
-                </div>
-                <div class="col">
-                  <Matrix :data="matrixList[i]" />
-                </div>
-              </div>
-              <div class="col" v-if="matrixList.length == 1">
-                <Matrix :data="matrixList[i - 1]" />
-              </div>
+              <q-card v-if="matrixList[i]" flat>
+                <q-card-section>
+                  <div class="row">
+                    <div class="col">
+                      <Matrix :data="matrixList[i - 1]" />
+                    </div>
+                    <div class="col">
+                      <Matrix :data="matrixList[i]" />
+                    </div>
+                  </div>
+                  <div class="col" v-if="matrixList.length == 1">
+                    <Matrix :data="matrixList[i - 1]" />
+                  </div>
+                </q-card-section>
+              </q-card>
             </q-item>
           </q-list>
         </q-scroll-area>
@@ -67,7 +71,7 @@
             <VueFlow>
               <Background
                 variant="lines"
-                :gap="50"
+                :gap="35"
                 :size="1"
                 style="background-color: #ffff"
               />
@@ -106,17 +110,17 @@ const drawer = ref(false);
 const matrixList = ref<IMatrix[]>([]);
 
 const { onConnect, addEdges, addNodes, getNodes, getEdges } = useVueFlow();
-const nodeCompter = ref(0);
 
 function generateNode() {
+  const nextId = getNodes.value.length;
   const newNode = {
-    id: `${++nodeCompter.value}`,
+    id: `${nextId}`,
     type: "custom",
     position: {
       x: Math.round(Math.random() * 500),
       y: Math.round(Math.random() * 500),
     },
-    data: { label: `X${nodeCompter.value}` },
+    data: { label: `X${nextId}` },
   };
 
   addNodes(newNode);
@@ -181,10 +185,15 @@ function solve(isMin: boolean) {
     );
 
   for (let i = 0; i < path.length; i++) {
+    const node = getNodes.value.at(path[i]);
+    // node?.style = { background: "#1b6006" };
+    // console.log(node);
     const edge = getEdges.value.find(
       (edge) => edge.id == `${path[i] + 1}->${path[i + 1] + 1}`
     );
-    if (edge) edge.style = { strokeWidth: 6, stroke: "#fd151b" };
+    if (edge) {
+      edge.style = { strokeWidth: 6, stroke: "#fd151b" };
+    }
   }
 }
 
@@ -267,7 +276,6 @@ exampleGraph();
 <style scoped>
 .btn {
   background: linear-gradient(to right, #2b0948, #440f50);
-  box-shadow: 2px 3px 10px black;
 }
 .btnAdd {
   position: fixed;
@@ -291,12 +299,18 @@ exampleGraph();
 }
 
 .header {
-  background: linear-gradient(to right, #295270, #524175);
+  background: #0f0c29;
+  background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);
+  background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
 }
 
 .title-princ {
   background-image: linear-gradient(to right, #fcef64, #fcc44b, #f20089);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.approach {
+  background: #536976;
 }
 </style>
