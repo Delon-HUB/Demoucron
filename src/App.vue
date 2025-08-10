@@ -25,14 +25,14 @@
                     no-caps
                     label="Minimum"
                     icon="arrow_downward"
-                    @click="solve(true)"
+                    @click="() => (isMin = true)"
                   />
                   <q-btn
                     class="text-bold"
                     no-caps
                     label="Maximum"
                     icon="arrow_upward"
-                    @click="solve(false)"
+                    @click="() => (isMin = false)"
                   />
                 </q-btn-group>
               </div>
@@ -61,6 +61,11 @@
                 </q-card-section>
               </q-card>
             </q-item>
+            <Approach
+              :is-min="isMin"
+              :first-matrix="createInitialMatrix(isMin)"
+              v-on:finished="(matrixs) => searchPath(matrixs)"
+            />
           </q-list>
         </q-scroll-area>
       </q-drawer>
@@ -104,9 +109,11 @@ import { ref } from "vue";
 import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
 import Matrix from "./components/Matrix.vue";
-import { demoucron, searchMaxPath, searchMinPath } from "./utils/fonctions";
+import { searchMaxPath, searchMinPath } from "./utils/fonctions";
+import Approach from "./components/Approach.vue";
 
 const drawer = ref(false);
+const isMin = ref(true);
 const matrixList = ref<IMatrix[]>([]);
 
 const { onConnect, addEdges, addNodes, getNodes, getEdges } = useVueFlow();
@@ -162,16 +169,15 @@ function createInitialMatrix(isMin: boolean) {
   };
 }
 
-function solve(isMin: boolean) {
+function searchPath(matrixs: IMatrix[]) {
   getEdges.value.forEach((edge) => {
     edge.style = { strokeWidth: 6 };
   });
   getNodes.value.forEach((node) => (node.data.active = false));
-  const initMatrix = createInitialMatrix(isMin);
-  matrixList.value = demoucron(isMin, initMatrix);
 
+  matrixList.value = matrixs;
   let path: number[] = [];
-  if (isMin)
+  if (isMin.value)
     path = searchMinPath(
       0,
       getNodes.value.length - 1,

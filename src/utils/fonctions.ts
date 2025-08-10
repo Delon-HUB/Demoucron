@@ -79,8 +79,7 @@ export function transposedOfMatrix(matrix: IMatrix): IMatrix {
 }
 
 export function demoucron(isMin: boolean, initMatrix: IMatrix): IMatrix[] {
-  const matrixList: IMatrix[] = [];
-  matrixList.push(initMatrix);
+  const matrixList: IMatrix[] = [initMatrix];
   matrixList[0].title = "Matrice D1";
 
   for (let i = 0; i < initMatrix.rows.length; i++) {
