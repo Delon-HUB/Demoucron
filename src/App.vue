@@ -166,6 +166,7 @@ function solve(isMin: boolean) {
   getEdges.value.forEach((edge) => {
     edge.style = { strokeWidth: 6 };
   });
+  getNodes.value.forEach((node) => (node.data.active = false));
   const initMatrix = createInitialMatrix(isMin);
   matrixList.value = demoucron(isMin, initMatrix);
 
@@ -186,13 +187,14 @@ function solve(isMin: boolean) {
 
   for (let i = 0; i < path.length; i++) {
     const node = getNodes.value.at(path[i]);
-    // node?.style = { background: "#1b6006" };
-    // console.log(node);
+    if (node) {
+      node.data.active = true;
+    }
     const edge = getEdges.value.find(
       (edge) => edge.id == `${path[i] + 1}->${path[i + 1] + 1}`
     );
     if (edge) {
-      edge.style = { strokeWidth: 6, stroke: "#fd151b" };
+      edge.style = { strokeWidth: 6, stroke: "#FF9B00" };
     }
   }
 }
