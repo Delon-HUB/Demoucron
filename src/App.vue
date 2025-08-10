@@ -112,9 +112,9 @@ const matrixList = ref<IMatrix[]>([]);
 const { onConnect, addEdges, addNodes, getNodes, getEdges } = useVueFlow();
 
 function generateNode() {
-  const nextId = getNodes.value.length;
+  let nextId = getNodes.value.length;
   const newNode = {
-    id: `${nextId}`,
+    id: `${++nextId}`,
     type: "custom",
     position: {
       x: Math.round(Math.random() * 500),
