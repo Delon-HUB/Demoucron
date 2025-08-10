@@ -42,32 +42,11 @@
       </q-header>
 
       <q-drawer v-model="drawer" :width="900">
-        <q-scroll-area class="fit approach">
-          <q-list padding class="menu-list">
-            <q-item clickable v-ripple v-for="i in matrixList.length">
-              <q-card v-if="matrixList[i]" flat>
-                <q-card-section>
-                  <div class="row">
-                    <div class="col">
-                      <Matrix :data="matrixList[i - 1]" />
-                    </div>
-                    <div class="col">
-                      <Matrix :data="matrixList[i]" />
-                    </div>
-                  </div>
-                  <div class="col" v-if="matrixList.length == 1">
-                    <Matrix :data="matrixList[i - 1]" />
-                  </div>
-                </q-card-section>
-              </q-card>
-            </q-item>
-            <Approach
-              :is-min="isMin"
-              :first-matrix="createInitialMatrix(isMin)"
-              v-on:finished="(matrixs) => searchPath(matrixs)"
-            />
-          </q-list>
-        </q-scroll-area>
+        <Approach
+          :is-min="isMin"
+          :first-matrix="createInitialMatrix(isMin)"
+          v-on:finished="(matrixs) => searchPath(matrixs)"
+        />
       </q-drawer>
 
       <q-page-container>
@@ -108,7 +87,6 @@ import CustomNode from "./components/CustomNode.vue";
 import { ref } from "vue";
 import { Background } from "@vue-flow/background";
 import { IMatrix, IRow } from "./Models/table";
-import Matrix from "./components/Matrix.vue";
 import { searchMaxPath, searchMinPath } from "./utils/fonctions";
 import Approach from "./components/Approach.vue";
 
@@ -316,9 +294,5 @@ exampleGraph();
   background-image: linear-gradient(to right, #fcef64, #fcc44b, #f20089);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.approach {
-  background: #536976;
 }
 </style>
