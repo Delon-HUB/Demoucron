@@ -91,7 +91,7 @@ import { searchMaxPath, searchMinPath } from "./utils/fonctions";
 import Approach from "./components/Approach.vue";
 
 const drawer = ref(false);
-const isMin = ref(true);
+const isMin = ref(false);
 const matrixList = ref<IMatrix[]>([]);
 
 const { onConnect, addEdges, addNodes, getNodes, getEdges } = useVueFlow();
